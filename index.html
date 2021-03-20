@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+	<title>Techniki Internetowe - Projekt 1 </title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet"  href="style.css">
+	<link rel="preconnect" href="https://fonts.gstatic.com">
+	<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+	<script src="animation.js"></script>
+	<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+	<script id="MathJax-script" async
+	  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+		
+	</head>
+	<body>
+		<header>
+			<h2> SIR model rozprzestrzeniania wirusa </h2>
+		</header>
+		<br>
+		<nav>
+
+			<ul>
+				<li><a onclick="show_theory()">Teoria</a></li>
+				<li><a onclick="show_animation1()">Symulacja</a></li>
+				<li><a onclick="show_game()">Gra</a></li>
+			</ul>
+
+		</nav>
+		<br>
+		<div class="row">
+			<div class="column" id="welcome"><h3 style="text-align: center;" id="header">WYBIERZ OPCJĘ Z MENU </h3></div>
+				<div class="column" id="theory" style="display: none;">
+					<h3>SIR model</h3>
+					<article>
+						SIR model jest jednym z podstawowych modeli rozprzetrzeniania się chorób. Populację dzielimy na trzy grupy:
+						<ul>
+							<li>S (Susceptible) - osoby, które mogą zostać zakażone i przenieść chorobę dalej</li>
+							<li>I (Infected) - osoby aktualnie zarażone</li>
+							<li>R (Removed) - osoby, które przeszły zakażenie (zarówno ozdrowieńcy i osoby zmarłe)</li>
+						</ul>
+						Zmienne te uzależniamy od czasu.
+						Liczba osób w grupie S może jedynie się zmniejszać o liczbę osób, które się zainfekowały (grupa I).
+						\begin{equation}
+						\frac{\partial s}{\partial t} = -\beta * s(t)*i(t)
+						\end{equation}
+						Współczynnik \(\beta\) określa zaraźliwość choroby - im większy tym więcej osób zaraża się. Minus przed równaniem oznacza, że liczba osób, które mogą się zarazić zmniejsza się wraz z czasem.<br>
+						Zależność liczby osób w grupe R zależy od równania na I i współczynnika \(\gamma\), który określa współczynnik zdrowienia, czyli np. opiekę medyczną - przyczynia się on do szybszego zdrowienia.
+						\begin{equation}
+						\frac{\partial r}{\partial t} = \gamma*i(t)
+						\end{equation}
+						Wzór na I wygląda następująco:
+						\begin{equation}
+						\frac{\partial I}{\partial t} = \beta * s(t)*i(t) - \gamma*i(t)
+						\end{equation}
+						Aby wykorzystać te równania w symulacji rozwiązujemy je metodą Eulera. Za warunki początkowe przyjmujemy:
+						<ul>
+							<li>S(0) - początkowa liczba osób podatnych na zarażenie</li>
+							<li>I(0) - początkowa liczba zainfekowanych </li>
+							<li>R(0) - początkowa liczba wyzdrowiałych - zawsze równa zero na początku
+						</ul>
+						Następnie w każdym kroku wyliczamy nową liczbę osób z grupy S, I i R ze wzorów:
+						\begin{equation}
+						 s_n = s_{n-1} -\beta * s_{n-1}*i_{n-1}*\Delta t
+						\end{equation}
+						\begin{equation}
+						 i_n = i_{n-1} +(\beta * s_{n-1}*i_{n-1} - \gamma*i_{n-1})*\Delta t
+						\end{equation}
+						\begin{equation}
+						 r_n = r_{n-1} +\gamma*i_{n-1}*\Delta t
+						\end{equation}
+						\(\Delta\)t to odstęp czasowy - przyjmujemy jeden dzień.
+						W symulacji dopasowywujemy współczynniki \(\beta\) i \(\gamma\) oraz początkową ilość populacji i osób zainfekowanych.
+						<h4>Źródła:</h4>
+						<ul>
+							<li><a href="https://www.youtube.com/watch?v=95FEkSo9GAc&ab_channel=SoundEffects">Dźwięk odbicia</a></li>
+							<li><a href="https://www.youtube.com/watch?v=U5GUASL9OBs&ab_channel=HeavyPupper">Dźwięk wygranej </a></li>
+							<li><a href="https://www.youtube.com/watch?v=3kxpcIUGgWY&ab_channel=GussLightbeer">Dźwięk przegranej</a></li>
+							<li><a href="https://www.svgbackgrounds.com/#rainbow-vortex">Tło</a></li>
+							<li><a href="https://commons.wikimedia.org/wiki/File:Coronavirus_cartoon.svg">Virus</a></li>
+						</ul>
+					</article>
+				</div>
+				<div class="column" id="first" style="display: none;">
+					<div style="float: left;">
+						<div class="sliders" id="sliders">
+							<label>Populacja</label>
+								<input class="slider" type="range" name="populationRange" id ="populationRange" min="70" max="200" value="70" oninput="popRange.value = populationRange.value">
+								<output name="popRange" id="popRange" style="text-align: center;">70</output> <br>
+							<label>Zainfekowani</label>
+							<input type="range" name="infected" id ="infected" min="1" max="4" value="1" oninput="infectedRange.value = infected.value">
+								<output name="infectedRange" id="infectedRange" style="text-align: center;">1</output> <br>
+							<label>Beta</label>
+							<input type="range" name="betaRange" id ="betaRange" min="0.008" max="0.012" value="0.008" step="0.001" oninput="bRange.value = betaRange.value">
+								<output name="bRange" id="bRange" style="text-align: center;">0.008</output> <br>
+								
+							<label>Gama</label>
+							<input type="range" name="gamaRange" id ="gamaRange" min="0.1" max="0.4" value="0.1" step="0.01" oninput="gRange.value = gamaRange.value">
+								<output name="gRange" id="gRange" style="text-align: center;">0.1</output> <br>
+								<br>
+
+							<button class="btn" value="Start" onclick="start()">Start</button>
+						</div>
+						<br>
+						<div class="sliders">
+							<label>Dzień</label> <div id="t"></div>
+							<label>Podejrzani</label>	<div id ="s"></div>
+							<label>Zainfekowani</label>	<div id = "i"></div>
+							<label>Wyzdrowiali</label><div id = "r"></div>
+						</div>
+					</div>
+					<div class="animation">
+						<canvas id="test" > </canvas>
+					</div>
+				</div>
+				<div class="column" id="game" style="display: none">
+					<h4 style="text-align: center;">Włącz dźwięk :) </h4>
+					<canvas id="canvas_game" width="480" height="320" style="background-color: white;"></canvas>
+					<br>
+					<button class="btn_game" onclick="start_game()" > Start </button>
+					<script src="game.js"></script>
+				</div>
+			</div>
+		<br>
+
+		<footer>
+			Techniki internetowe 2020 - Kinga Pyrek
+		</footer>
+	</body>
+</html>
