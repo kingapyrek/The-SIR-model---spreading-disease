@@ -1,4 +1,4 @@
-# The SIR model - spreading-disease
+# The SIR model - spreading disease
 ### Javascript project with HTML, CSS
 
 The SIR model of spreading disease is simualated as canvas with balls:
